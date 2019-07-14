@@ -25,10 +25,11 @@ type announcer struct {
 
 func (a *announcer) Post(post *reddit.Post) error {
 
-	filter := strings.Split(a.SubNSearches[post.Subreddit][0], ",")
+	//Grab list of search words by subreddit
+	filter := a.SubNSearches[post.Subreddit]
 
+	//Iterate over list looking for match and then post to slack if match true
 	for _, word := range filter {
-
 		if strings.Contains(post.Title, word) {
 			msg := "This post looks interesting, check it out: " + post.Title + string(" \n") + post.URL
 			PostMessage(msg, a.Slack)
@@ -56,6 +57,7 @@ func main() {
 		log.Fatalln("Failed to map Subreddits to keywords: ", err)
 		return
 	}
+
 	//Grab all the map keys to use as our subreddits to open streams to
 	keys := make([]string, 0, len(a.SubNSearches))
 	for k := range a.SubNSearches {

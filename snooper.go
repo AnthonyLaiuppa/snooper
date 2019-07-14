@@ -3,7 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"fmt"
 	"github.com/turnage/graw"
 	"github.com/turnage/graw/reddit"
 	"io/ioutil"
@@ -25,20 +24,17 @@ type announcer struct {
 }
 
 func (a *announcer) Post(post *reddit.Post) error {
-	fmt.Printf("%s posted %s %s \n", post.Author, post.Title, post.Subreddit)
 
-	
 	filter := strings.Split(a.SubNSearches[post.Subreddit][0], ",")
 
 	for _, word := range filter {
-		fmt.Println("This is the word", word)
+
 		if strings.Contains(post.Title, word) {
 			msg := "This post looks interesting, check it out: " + post.Title + string(" \n") + post.URL
 			PostMessage(msg, a.Slack)
 			return nil
 		}
 	}
-	fmt.Println(filter)
 
 	return nil
 }
@@ -50,14 +46,14 @@ func main() {
 	// most every 5 seconds.
 	apiHandle, err := reddit.NewScript("Ubuntu:github.com/AnthonyLaiuppa/snooper:v0.0.1 (by /u/ThisIsMyRedditAccount)", 5*time.Second)
 	if err != nil {
-		fmt.Println("Failed to create NewScript: ", err)
+		log.Fatalln("Failed to create NewScript: ", err)
 		return
 	}
 
 	//Read in what subs we want to monitor with what keywords
 	a, err := SetUp()
 	if err != nil {
-		fmt.Println("Failed to map Subreddits to keywords: ", err)
+		log.Fatalln("Failed to map Subreddits to keywords: ", err)
 		return
 	}
 	//Grab all the map keys to use as our subreddits to open streams to
@@ -77,7 +73,7 @@ func main() {
 
 	// This time, let's block so the bot will announce (ideally) forever.
 	if err := wait(); err != nil {
-		fmt.Printf("graw run encountered an error: %v \n", err)
+		log.Fatalln("graw run encountered an error: %v \n", err)
 		stop()
 	}
 }
@@ -101,10 +97,7 @@ func PostMessage(msg string, url string) {
 	}
 	defer resp.Body.Close()
 
-	//Log status return
-	fmt.Println("response Status:", resp.Status)
 	return
-
 }
 
 func SetUp() (a announcer, err error) {
@@ -115,7 +108,7 @@ func SetUp() (a announcer, err error) {
 	//Open the json file containing our search parameters
 	jsonFile, err := os.Open("./sns.ini")
 	if err != nil {
-		fmt.Println("File not found: ", err)
+		log.Fatalln("File not found: ", err)
 		return a, err
 	}
 	defer jsonFile.Close()
@@ -125,14 +118,14 @@ func SetUp() (a announcer, err error) {
 	//Read in our JSON
 	byteValue, err := ioutil.ReadAll(jsonFile)
 	if err != nil {
-		fmt.Println("File unreadable: ", err)
+		log.Fatalln("File unreadable: ", err)
 		return a, err
 	}
 
 	//Attempt to unmarshal our json
 	err = json.Unmarshal(byteValue, &subreddits)
 	if err != nil {
-		fmt.Println("Error unmarshaling JSON : ", err)
+		log.Fatalln("Error unmarshaling JSON : ", err)
 		return a, err
 	}
 

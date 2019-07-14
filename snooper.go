@@ -15,7 +15,7 @@ import (
 
 type Subreddit struct {
 	Name  string   `json:"name"`
-	Words []string `json:words`
+	Words []string `json:"words"`
 }
 
 type announcer struct {
@@ -91,6 +91,9 @@ func PostMessage(msg string, url string) {
 
 	//Make post request to slack webhook
 	req, err := http.NewRequest("POST", url, bytes.NewBuffer(mib))
+	if err != nil {
+		log.Fatalln(err)
+	}
 	req.Header.Set("Content-Type", "application/json")
 	client := &http.Client{}
 	resp, err := client.Do(req)

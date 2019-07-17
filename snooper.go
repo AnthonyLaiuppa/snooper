@@ -13,7 +13,7 @@ import (
 	"time"
 )
 
-type Subreddit struct {
+type subreddit struct {
 	Name  string   `json:"name"`
 	Words []string `json:"words"`
 }
@@ -23,6 +23,7 @@ type announcer struct {
 	Slack        string
 }
 
+//  graw.Scan() will use this Post handler
 func (a *announcer) Post(post *reddit.Post) error {
 
 	//Grab list of search words by subreddit
@@ -32,7 +33,7 @@ func (a *announcer) Post(post *reddit.Post) error {
 	for _, word := range filter {
 		if strings.Contains(post.Title, word) {
 			msg := "This post looks interesting, check it out: " + post.Title + string(" \n") + post.URL
-			PostMessage(msg, a.Slack)
+			postMessage(msg, a.Slack)
 			return nil
 		}
 	}
@@ -52,7 +53,7 @@ func main() {
 	}
 
 	//Read in what subs we want to monitor with what keywords
-	a, err := SetUp()
+	a, err := setUp()
 	if err != nil {
 		log.Fatalln("Failed to map Subreddits to keywords: ", err)
 		return
@@ -80,7 +81,7 @@ func main() {
 	}
 }
 
-func PostMessage(msg string, url string) {
+func postMessage(msg string, url string) {
 
 	//Marshal up some json to post
 	message := map[string]interface{}{"text": msg}
@@ -105,7 +106,7 @@ func PostMessage(msg string, url string) {
 	return
 }
 
-func SetUp() (a announcer, err error) {
+func setUp() (a announcer, err error) {
 
 	//Get slack webhook URL
 	a.Slack = os.Getenv("SWHURL")
@@ -118,7 +119,7 @@ func SetUp() (a announcer, err error) {
 	}
 	defer jsonFile.Close()
 
-	var subreddits []Subreddit
+	var subreddits []subreddit
 
 	//Read in our JSON
 	byteValue, err := ioutil.ReadAll(jsonFile)

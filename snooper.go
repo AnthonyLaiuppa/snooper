@@ -76,7 +76,7 @@ func main() {
 
 	// This time, let's block so the bot will announce (ideally) forever.
 	if err := wait(); err != nil {
-		log.Fatalln("graw run encountered an error: %v \n", err)
+		log.Fatalln("graw run encountered an error:  \n", err)
 		stop()
 	}
 }

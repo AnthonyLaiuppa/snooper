@@ -1,5 +1,5 @@
 FROM scratch 
-ADD main /
+ADD snooper_unix /
 ADD sns.ini /
 ADD ca-certificates.crt /etc/ssl/certs/
-CMD ["/main"]
+CMD ["/snooper_unix"]

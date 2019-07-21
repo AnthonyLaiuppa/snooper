@@ -81,7 +81,7 @@ func main() {
 	}
 }
 
-func postMessage(msg string, url string) {
+func postMessage(msg string, url string) int {
 
 	//Marshal up some json to post
 	message := map[string]interface{}{"text": msg}
@@ -103,7 +103,7 @@ func postMessage(msg string, url string) {
 	}
 	defer resp.Body.Close()
 
-	return
+	return resp.StatusCode
 }
 
 func setUp() (a announcer, err error) {

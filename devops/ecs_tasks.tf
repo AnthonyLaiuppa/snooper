@@ -18,7 +18,7 @@ resource "aws_ecs_task_definition" "snooper" {
 }
 
 resource "aws_ecs_service" "snooper" {
-  name            = "snooper - ${terraform.workspace}"
+  name            = "snooper-${terraform.workspace}"
   cluster         = aws_ecs_cluster.fargate.id
   launch_type     = "FARGATE"
   task_definition = aws_ecs_task_definition.snooper.arn

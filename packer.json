@@ -2,7 +2,7 @@
   "variables": {
     "AWS_ACCESS_KEY_ID": "{{env `AWS_ACCESS_KEY_ID`}}",
     "AWS_SECRET_ACCESS_KEY": "{{env `AWS_ACCESS_KEY_ID`}}",
-    "ECR_URL": "",
+    "ECR_URL": ""
   },
 
 
@@ -11,12 +11,13 @@
     "image": "scratch",
     "commit": true,
     "changes": [
-      "FROM scratch"
       "ADD snooper_unix /",
       "ADD sns.ini /",
       "ADD ca-certificates.crt /etc/ssl/certs/",
       "CMD [\"/snooper_unix\"]"
-  ],
+
+    ]
+  }],
 
   "post-processors": [
     [
@@ -31,7 +32,7 @@
         "aws_access_key": "{{user `AWS_ACCESS_KEY_ID`}}",
         "aws_secret_key": "{{user `AWS_SECRET_ACCESS_KEY`}}",
         "login_server": "{{user `ECR_URL`}}/"
-      }
+      }   
     ]
   ]
 }

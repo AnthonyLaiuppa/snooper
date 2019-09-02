@@ -12,7 +12,7 @@
     "commit": true,
     "changes": [
       "ADD snooper_unix /",
-      "ADD sns.ini /",
+      "ADD config.json /",
       "ADD ca-certificates.crt /etc/ssl/certs/",
       "CMD [\"/snooper_unix\"]"
 

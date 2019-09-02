@@ -11,8 +11,8 @@ A simple Golang program meant to monitor reddit in real time and post messages o
 ### Requirements
 
 1. *Environment variable* set with Slack webhook URL of channel to post to. 
-	* `SWHURL=WHURL=https://hooks.slack.com/services/DSHUYYUIUYWE/SUYUYdhqhweiuyYUIDHihuer`
-2. sns.ini filled out with your search criteria
+	* `export SWHURL=https://hooks.slack.com/services/DSHUYYUIUYWE/SUYUYdhqhweiuyYUIDHihuer`
+2. config.json filled out with your search criteria
 	* Subreddit -> Keywords
 
 

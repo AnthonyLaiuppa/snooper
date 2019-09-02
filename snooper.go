@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"fmt"
 	"github.com/turnage/graw"
 	"github.com/turnage/graw/reddit"
 	"io/ioutil"
@@ -29,9 +30,11 @@ func (a *announcer) Post(post *reddit.Post) error {
 	//Grab list of search words by subreddit
 	filter := a.SubNSearches[post.Subreddit]
 
-	//Iterate over list looking for match and then post to slack if match true
+	st := strings.ToLower(post.SelfText)
+
+	//Iterate over list looking for match in selftext and then post to slack if match true
 	for _, word := range filter {
-		if strings.Contains(post.Title, word) {
+		if strings.Contains(st, word) {
 			msg := "This post looks interesting, check it out: " + post.Title + string(" \n") + post.URL
 			postMessage(msg, a.Slack)
 			return nil
@@ -43,10 +46,11 @@ func (a *announcer) Post(post *reddit.Post) error {
 
 func main() {
 
+	fmt.Println("[*] Starting")
 	// Get an api handle to reddit for a logged out (script) program,
 	// which forwards this user agent on all requests and issues a request at
 	// most every 5 seconds.
-	apiHandle, err := reddit.NewScript("Ubuntu:github.com/AnthonyLaiuppa/snooper:v0.0.1 (by /u/ThisIsMyRedditAccount)", 5*time.Second)
+	apiHandle, err := reddit.NewScript("Ubuntu:github.com/AnthonyLaiuppa/snooper:v0.0.1 (by /u/LaughingWaffle)", 5*time.Second)
 	if err != nil {
 		log.Fatalln("Failed to create NewScript: ", err)
 		return
@@ -69,6 +73,7 @@ func main() {
 	// should connect to the bot.
 	cfg := graw.Config{Subreddits: keys}
 
+	fmt.Println("[*] Configuration complete")
 	// launch a graw scan in a goroutine using the bot, handle, and config. The
 	// returned "stop" and "wait" are functions. "stop" will stop the graw run
 	// at any time, and "wait" will block until it finishes.
@@ -112,7 +117,7 @@ func setUp() (a announcer, err error) {
 	a.Slack = os.Getenv("SWHURL")
 
 	//Open the json file containing our search parameters
-	jsonFile, err := os.Open("./sns.ini")
+	jsonFile, err := os.Open("./config.json")
 	if err != nil {
 		log.Fatalln("File not found: ", err)
 		return a, err

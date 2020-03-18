@@ -50,7 +50,7 @@ func main() {
 	// Get an api handle to reddit for a logged out (script) program,
 	// which forwards this user agent on all requests and issues a request at
 	// most every 5 seconds.
-	apiHandle, err := reddit.NewScript("Ubuntu:github.com/AnthonyLaiuppa/snooper:v0.0.1 (by /u/LaughingWaffle)", 5*time.Second)
+	apiHandle, err := reddit.NewScript("Ubuntu:github.com/AnthonyLaiuppa/snooper:v0.0.1 (by /u/YOURUSERNAME)", 5*time.Second)
 	if err != nil {
 		log.Fatalln("Failed to create NewScript: ", err)
 		return
